@@ -1,22 +1,26 @@
+import Router from 'next/router'
+import Link from 'next/link'
 import { Menu } from 'grommet';
 import Logo from '../media/animalCrossingShareLogo.png'
 
 export default function Header() {
 	return (
     	<div className="header">
-			<img className="header__logo" src={Logo}></img>
+			<Link href="/list">
+				<img className="header__logo" src={Logo}></img>
+			</Link>
 		  	<div className="header__menu">
 			    <Menu
         			label='Menu'
         			items={[
-            			{ label: 'Dashboard' },
-            			{ label: 'View Post' },
-            			{ label: 'Activity Feed' },
-            			{ label: 'Favorites' },
-            			{ label: 'Account Settings' },
-            			{ label: 'Languages' },
-            			{ label: 'Add work' },
-            			{ label: 'Logout' },
+            			{ label: 'Dashboard', onClick: () => { Router.push('/dashboard')}},
+            			{ label: 'View Post', disabled: true },
+            			{ label: 'Activity Feed', disabled: true },
+            			{ label: 'Favorites', disabled: true },
+            			{ label: 'Account Settings', disabled: true },
+            			{ label: 'Languages', disabled: true },
+            			{ label: 'Add work', disabled: true },
+            			{ label: 'Logout', disabled: true },
         			]}
         		/>
 		  	</div>
@@ -25,6 +29,7 @@ export default function Header() {
 					display: flex;
 				}
 				.header__logo {
+					pointer-events: auto;
 					padding: 25px;
 					max-width: 8%;
 					min-width: 8%;
