@@ -9,8 +9,6 @@
     "export": "next export"
   },
   "dependencies": {
-    "@material/card": "^7.0.0",
-    "antd": "^4.3.5",
     "grommet": "^2.14.0",
     "grommet-icons": "^4.4.0",
     "material-components-web": "^7.0.0",
