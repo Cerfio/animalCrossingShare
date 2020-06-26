@@ -1,13 +1,12 @@
 import Router from 'next/router'
 import Link from 'next/link'
 import { Menu } from 'grommet';
-import Logo from '../media/animalCrossingShareLogo.png'
 
 export default function Header() {
 	return (
     	<div className="header">
 			<Link href="/list">
-				<img className="header__logo" src={Logo}></img>
+				<img className="header__logo" src="/animalCrossingShareLogo.png"></img>
 			</Link>
 		  	<div className="header__menu">
 			    <Menu
