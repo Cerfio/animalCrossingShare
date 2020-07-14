@@ -3,14 +3,35 @@ import Header from '@components/Header'
 import Footer from '@components/Footer'
 import Card from '@components/Card'
 import SearchBar from '@components/SearchBar'
-
-const posts = Array(20).fill({
-	image : "https://cdn.vox-cdn.com/thumbor/LSeN04nyK2x1kTPJuAe3z8oPfcU=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19585844/Switch_ACNH_ND0904_SCRN_11_bmp_jpgcopy.jpg",
-	title : "reyesSweat",
-	author: "cerfio"
-});
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie'
 
 export default function Home() {
+	const [images, setImages] = useState([]);
+	useEffect(() => {
+        async function fetchMyAPI() {
+            try {
+                const responseUpload = await axios.get(process.env.NEXT_PUBLIC_BACK_HOST + '/post/get/limit', {
+                    params: {
+                        many: 20,
+                        offset: 0
+                    },
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get(process.env.NEXT_PUBLIC_COOKIE_NAME),
+                    }
+                });
+                const decodedImages = responseUpload;
+                decodedImages.data.forEach((element, index) => {
+					if (element.buffer[0] != 'error')
+						decodedImages.data[index].image = 'data:image/jpeg;base64,' + Buffer.from(element.buffer[0].data).toString('base64');
+				});
+				setImages(decodedImages.data);
+            }catch(e) {
+            }
+        }
+        fetchMyAPI()
+      }, [])
 	return (
 		<div className="list">
       		<Head>
@@ -23,9 +44,9 @@ export default function Home() {
 			</div>
       		<main>          
         		<div className="list__body">
-					{posts.map((post, i) =>
-						<div className="list__body__item">
-							<Card image={post.image} title={post.title} author={post.author} key={i} />
+					{images.map((post, index) =>
+						<div key={index} className="list__body__item">
+							<Card image={post.image} title={post.name_post} author={post.user.pseudo}/>
 						</div>
 					)}
         		</div>
