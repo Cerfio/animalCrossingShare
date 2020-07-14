@@ -1,9 +1,13 @@
 import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
-import { Box, DataChart, Image } from "grommet";
+import { Button, DataChart } from "grommet";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const data = [];
+
 for (let i = 0; i < 7; i += 1) {
     const v = Math.sin(i / 2.0);
     data.push({
@@ -12,13 +16,30 @@ for (let i = 0; i < 7; i += 1) {
 	});
 }
 
-const posts = Array(5).fill({
-	image : "https://cdn.vox-cdn.com/thumbor/LSeN04nyK2x1kTPJuAe3z8oPfcU=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19585844/Switch_ACNH_ND0904_SCRN_11_bmp_jpgcopy.jpg",
-	title : "reyesSweat",
-	author: "cerfio"
-});
-
 export default function Dashboard() {
+    const [images, setImages] = useState([]);
+    useEffect(() => {
+        async function fetchMyAPI() {
+            try {
+                const responseUpload = await axios.get(process.env.NEXT_PUBLIC_BACK_HOST + '/post/get/limit', {
+                    params: {
+                        many: 5,
+                        offset: 0
+                    },
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get(process.env.NEXT_PUBLIC_COOKIE_NAME),
+                    }
+                });
+                const decodedImages = [];
+                responseUpload.data.forEach((element) => {
+                    decodedImages.push(Buffer.from(element.data).toString('base64'));
+                });
+                setImages(decodedImages);
+            }catch(e) {
+            }
+        }
+        fetchMyAPI()
+      }, [])
     return (
         <div className="dashboard">
             <Head>
@@ -31,11 +52,11 @@ export default function Dashboard() {
 				<DataChart data={data} chart={{ key: "percent" }} />
 				<h1>Vos posts</h1>
 				<div className="dashboard__posts">
-					{posts.map((post, i) =>
-						<img key={i} className="dashboard__posts__image" src={post.image}/>
+                    {images.map((image, i) =>
+                        <img key={i} className="dashboard__posts__image" src={`data:image/jpeg;base64,${image}`} />
 					)}
 				</div>
-				<p>See all</p>
+                <Button primary label="See all" onClick={() => {}}/>
             </main>
             <Footer />
             <style jsx>{`
