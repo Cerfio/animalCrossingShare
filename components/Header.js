@@ -1,6 +1,7 @@
 import Router from 'next/router'
 import Link from 'next/link'
 import { Menu } from 'grommet';
+import Cookies from 'js-cookie';
 
 export default function Header() {
 	return (
@@ -12,14 +13,14 @@ export default function Header() {
 			    <Menu
         			label='Menu'
         			items={[
-            			{ label: 'Dashboard', onClick: () => { Router.push('/dashboard')}},
+            			{ label: 'Dashboard', onClick: () => { Router.push('/dashboard') }},
             			{ label: 'View Post', disabled: true },
             			{ label: 'Activity Feed', disabled: true },
             			{ label: 'Favorites', disabled: true },
             			{ label: 'Account Settings', disabled: true },
             			{ label: 'Languages', disabled: true },
-            			{ label: 'Add work', disabled: true },
-            			{ label: 'Logout', disabled: true },
+            			{ label: 'Add work', onClick: () => { Router.push('/upload') }},
+						{ label: 'Logout', onClick: () => { Cookies.remove('animalcrossing'); Router.push('/') }},
         			]}
         		/>
 		  	</div>
